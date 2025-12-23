@@ -17,7 +17,9 @@ public class HelperCar extends HelperBase{
     }
 
     public void searchCurrentMonth(String city, String dateFrom, String dateTo) {
+        clearTextBox(By.id("city"));
         typeCity(city);
+        clearTextBox(By.id("dates"));
         click(By.id("dates"));
 
         //"12/25/2025", "12/31/2025"
@@ -43,7 +45,9 @@ public class HelperCar extends HelperBase{
     }
 
     public void searchCurrentYear(String city, String dateFrom, String dateTo) {
+        clearTextBox(By.id("city"));
         typeCity(city);
+        clearTextBox(By.id("dates"));
         click(By.id("dates"));
 
         LocalDate now = LocalDate.now();
@@ -75,5 +79,39 @@ public class HelperCar extends HelperBase{
 
         }
 
+    }
+
+    public void searchAnyPeriod(String city, String dataFrom, String dataTo) {
+        clearTextBox(By.id("city"));
+        typeCity(city);
+        clearTextBox(By.id("dates"));
+        click(By.id("dates"));
+        LocalDate now = LocalDate.now();
+        LocalDate from = LocalDate.parse(dataFrom, DateTimeFormatter.ofPattern("M/d/yyyy"));
+        LocalDate to = LocalDate.parse(dataTo, DateTimeFormatter.ofPattern("M/d/yyyy"));
+
+        int diffYear;
+        int diffMonth;
+        //***from
+        diffYear =from.getYear() - now.getYear() ;
+        if (diffYear == 0) {
+            diffMonth = from.getMonthValue()-now.getMonthValue();
+        }else {
+            diffMonth = 12-now.getMonthValue()+from.getMonthValue();
+        }
+        clickNextMonthBtn(diffMonth);
+        String locatorFrom = "//span[text()='"+from.getDayOfMonth()+"']";
+        click(By.xpath(locatorFrom));
+
+        //****to
+        diffYear= to.getYear()- from.getYear();
+        if (diffYear==0){
+            diffMonth = to.getMonthValue()-from.getMonthValue();
+        }else {
+            diffMonth = 12-from.getMonthValue()-to.getMonthValue();
+        }
+        clickNextMonthBtn(diffMonth);
+        String locatorTo = "//span[text()='"+to.getDayOfMonth()+"']";
+        click(By.xpath(locatorTo));
     }
 }
